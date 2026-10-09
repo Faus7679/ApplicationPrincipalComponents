@@ -9,6 +9,7 @@ Excel workbook locally and pass its path to the script.
 Install the required scientific Python packages, then run:
 
 ```bash
+python -m pip install numpy pandas matplotlib scikit-learn openpyxl
 python pca_telco_analysis.py --data "/path/to/CST-570-RS-WAFn-UseC-Telco-Customer-Churn.xlsx"
 ```
 

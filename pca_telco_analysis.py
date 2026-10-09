@@ -153,7 +153,7 @@ def save_variance_plot(pca: PCA, output_dir: Path) -> None:
 
 
 def save_projection_plot(
-    scores: np.ndarray, labels: pd.Series, label_text: pd.Series, output_dir: Path
+    scores: np.ndarray, label_text: pd.Series, output_dir: Path
 ) -> None:
     """Plot customers in the first two PCA dimensions, colored by churn."""
     figure, axis = plt.subplots(figsize=(8, 6))
@@ -252,7 +252,7 @@ def run_analysis(data_path: Path, output_dir: Path) -> None:
 
     save_variance_plot(pca, output_dir)
     if scores.shape[1] >= 2:
-        save_projection_plot(scores, labels, label_text, output_dir)
+        save_projection_plot(scores, label_text, output_dir)
     save_loading_plot(pca, list(features.columns), output_dir)
 
     print(f"Rows: {len(frame):,}; encoded features: {features.shape[1]:,}")
@@ -260,6 +260,8 @@ def run_analysis(data_path: Path, output_dir: Path) -> None:
     for component, variance in enumerate(pca.explained_variance_ratio_[:5], start=1):
         print(f"  PC{component}: {variance:.2%}")
     print(f"  First 3 components: {pca.explained_variance_ratio_[:3].sum():.2%}")
+    components_for_90 = np.searchsorted(np.cumsum(pca.explained_variance_ratio_), 0.90) + 1
+    print(f"  Components needed for 90%: {components_for_90}")
     print("\nLargest absolute PC1 loadings:")
     loadings = pd.Series(pca.components_[0], index=features.columns)
     print(loadings.reindex(loadings.abs().sort_values(ascending=False).head(10).index).to_string())
